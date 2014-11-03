@@ -14,7 +14,7 @@ cd GoRae
 
 5) Get started [using-GoRae]
 
-[using-GoRae]: http://youtu.be/UEK-mpfjrMM
+[Clip]: http://youtu.be/UEK-mpfjrMM
 
 
 
@@ -25,7 +25,9 @@ We made web UI for light user who haven't full understanding about Virtual machi
 "고래" "GoRae" means whale in Korean.
 
 
-Clip : http://www.youtube.com/watch?v=UEK-mpfjrMM
+
+
+We tried to use certified framework. so we can get Dockerfile based on "Dockerfile project".
 
 
 
