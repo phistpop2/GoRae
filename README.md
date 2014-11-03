@@ -12,6 +12,8 @@ cd GoRae
 
 4) node repository
 
+5) Get started [using-GoRae]
+
 [using-GoRae]: http://youtu.be/UEK-mpfjrMM
 
 
