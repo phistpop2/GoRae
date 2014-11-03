@@ -1,0 +1,64 @@
+/*************************************************
+      SlidePanel CSS
+      @author Fabio Mangolini
+      http://www.responsivewebmobile.com
+**************************************************/
+
+body {
+    margin-top: 50px;
+}
+
+#slidein-panel {
+    margin: 0;
+    padding: 0;
+    background-color: #222222;
+    width: 250px;
+}
+
+#slidein-panel ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#slidein-panel ul li {
+    background-color: #222222;
+    display: block;
+    border-top: 1px solid #333333;
+}
+
+#slidein-panel ul li a:link,
+#slidein-panel ul li a:visited {
+    display: block;
+    text-decoration: none;
+    color: #FFFFFF;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 200;
+    font-family: 'Open Sans', HelveticaNeue, Helvetica, Arial;
+}
+
+#slidein-panel ul li:hover {
+    background-color: #111111;
+}
+
+#slidein-panel-container {
+    position: relative;
+}
+
+
+
+
+#slidein-panel-btn {
+    display: block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    padding: 0 5px;
+    background-color: #000000;
+    color: #FFFFFF;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+}

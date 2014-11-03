@@ -1,0 +1,364 @@
+#!/usr/local/bin/node
+
+var vagrant = require('vagrant');
+var whales = require('./whales');
+var Docker = require('dockerode');
+var express = require('express')
+var app = express()
+
+
+
+var optsc = {
+  'Hostname': '',
+  'User': '',
+  'AttachStdin': true,
+  'AttachStdout': true,
+  'AttachStderr': true,
+  'Tty': true,
+  'OpenStdin': true,
+  'StdinOnce': false,
+  'Env': null,
+  // 'Cmd': ['bash','/ghost-start'],
+  'Dns': ['8.8.8.8', '8.8.4.4'],
+  'Image': '',
+  // 'Volumes': ["/data", "/ghost-override"],
+  // 'VolumesFrom': '',
+  // 'WorkDir':'/ghost',
+  // 'PortBindings':{
+                 // "2368/tcp":{}                  
+         // },
+  'PublishAllPorts':true
+};
+
+
+var ConParam =   {
+         "Hostname":"",
+         "Domainname": "",
+         "User":"",
+         "AttachStdin":false,
+         "AttachStdout":true,
+         "AttachStderr":true,
+         "Tty":true,
+         "OpenStdin":false,
+         "StdinOnce":false,
+         "Env":null,
+         "Cmd":[
+                 "nginx"
+         ],
+         "Image":"",
+         "Volumes":{
+                 "/tmp": {}
+         },
+         "WorkingDir":"/etc/nginx",
+         "NetworkDisabled": false,
+         "ExposedPorts":{
+                 // "22/tcp": {}
+         },
+         "RestartPolicy": { "Name": "always" }
+    }
+
+// = new Docker({ socketPath: false, host: 'http://172.17.8.100', port: '2375'});
+docker = new Docker({ socketPath: false, host: 'http://172.17.8.101', port: '2375'});
+
+// docker2 = new Docker({ socketPath: false, host: 'http://172.17.8.102', port: '2375'});
+
+// whales.getImagelist(docker2, function(err, data){
+	
+// console.log(docker2);
+
+var minioncnt = 0;
+
+var minion = {
+	'Ram':'1024',
+	'Cpu':'1',
+	'Name':'minion'
+}
+
+
+// whales.getImage(docker, optsc['Image'],function(err, data){
+
+// 	console.log(data);
+// });
+
+// whales.createImage(docker2, optsc['Image'], function(err, data ){
+
+// 	if(err) {console.log(err); return;}
+
+// 	whales.createContainer(docker2, optsc, function(err, data){
+// 	console.log("test");
+// 	if(err)console.log(err);
+
+// 	console.log(data);
+// });
+
+// })
+app.get('/getImage', function(req, res){
+  ConParam.Image='dockerfile/nginx'
+  whales.getImage(docker, 'dockerfile/nginx', function(data){
+    res.send(data)
+  })
+})
+
+app.get('/t', function(req, res){
+
+  var optsc = {
+  'Hostname': '',
+  'User': '',
+  'AttachStdin': true,
+  'AttachStdout': true,
+  'AttachStderr': true,
+  'Tty': true,
+  'OpenStdin': true,
+  'StdinOnce': false,
+  'Env': [ "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME=/root"],
+  'Cmd': ['mongod','--rest'],
+  'Dns': ['8.8.8.8', '8.8.4.4'],
+  'Image': 'dockerfile/mongodb',
+  'Volumes': ["/data/db"],
+  'VolumesFrom': 'storage:/data',
+  'WorkDir':'/data',
+  // 'PortBindings':{
+                 // "2368/tcp":{}                  
+         // },
+  'PublishAllPorts':true
+};
+
+
+  // console.log(optsc)
+  whales.createContainer(docker, optsc, function(data){
+    res.send(data)
+  })
+})
+
+app.get('/q', function(req, res){
+    var optsc = {
+        'Hostname': '',
+        'User': '',
+        'AttachStdin': true,
+        'AttachStdout': true,
+        'AttachStderr': true,
+        'Tty': true,
+        'OpenStdin': true,
+        'StdinOnce': false,
+        'Env': [ "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME=/root"],
+        'Cmd': ['mongod','--rest'],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Image': 'dockerfile/mongodb',
+        'Volumes': ["/data/db"],
+        //'VolumesFrom': 'storage:/data',
+        'WorkDir':'/data',
+        // 'PortBindings':{
+        // "2368/tcp":{}
+        // },
+        'PublishAllPorts':true
+    };
+
+
+  docker.pull(optsc.Image, function (err, stream) {
+    if(err) res.send(err)
+      stream.pipe(process.stdout, {end:true});
+
+          stream.on('end', function () {
+            docker.run(IMG,["mongod","--rest"],process.stdout,true,{'PublishAllPorts':true},function(Id, stream){
+              // optsc.Image = IMG
+              // docker.createContainer(optsc, )
+              console.log(Id, stream)
+              
+              if(stream!=null&&stream.StatusCode!=0){
+                  stream.pipe(process.stdout, {end:true});
+                stream.on('end', function () {
+                  res.send(done)
+                })
+              }
+              
+              res.send(stream)
+
+            } )
+            
+          });
+    
+  // streaming output from pull...
+  })
+})
+
+app.get('/test', function (req, res) {
+
+
+  // whales.getImagelist(docker, function(images){
+  //   images.forEach(function (image){
+  //     console.log(image);
+  //   })
+
+  //   whales.createImage(docker,"ghost", function(img){
+
+  //     // ConParam.Image="ghost"
+
+  //     // whales.createContainer()
+  //   })
+  // })
+// docker.listImages({all:false},function (err, images){ images.forEach(function(image){})})
+  // docker.getImage('70bb626403d0', function(err, data){
+  //   console.log({"err":err, "data":data})
+  //   if(err) res.send(err)
+  //     res.send(data)
+
+  // })
+
+var msg
+
+ docker.listImages({all: false}, function(err, images) {
+  if(err) {
+    console.log(err) 
+    return err
+  }
+
+  images.forEach(function (image){
+    if(image.name != "whales/d3") {
+      msg = "already exist"
+      docker.loadImage('./share/d3.tar',ConParam, function(err, data){
+  if(err) res.send(err)
+    res.send(data)
+})
+    
+    }
+  })
+
+})
+
+  var tmp = ConParam
+tmp.image
+
+
+  // whales.allContainerStop(docker, function(err,Imagelist){ 
+  //  // console.log(Imagelist)
+  //  res.send(Imagelist) 
+  // })  
+
+})
+
+app.get('/clean', function(req, res){
+  whales.allContainerStop(docker, function(msg){ 
+   // console.log(Imagelist)
+   res.send(msg) 
+  
+  })
+})
+
+
+app.get('/run', function(req, res){
+  Image='dockerfile/nginx'
+  docker.run(Image,'nginx',process.stdout, false, function(err, image){    
+    if(err) res.send(err)
+      else res.send(image)
+  })
+})
+
+app.get('/get/:Id', function (req, res) {
+  whales.getPort(docker, req.param('Id'), function(ports){
+    // console.log(info)
+   
+    res.send(ports)
+  })
+})
+
+
+app.get('/getContainer', function (req, res) {
+  whales.getContainerlist(docker, function(err,container){
+    // console.log(Imagelist)
+    res.send(container)
+  })
+})
+
+
+app.get('/create/:image', function (req, res) {
+  whales.createImage(docker, req.param('image'), function(image){
+    // console.log(Imagelist)
+    res.send(image)
+  })
+})
+
+app.get('/search/:keyword', function (req, res) {
+
+  whales.searchImage(docker, req.param('keyword'),function(images){
+    var imagelist=[]
+    images.forEach(function (image){
+      if(image.name) imagelist.push({"name":image.name,"description":image.description})
+      })
+      res.send(imagelist)
+  })
+    // console.log(Imagelist)
+    
+  })
+
+app.get('/vagrant/up', function (req, res) {
+  vagrant.up(function(code){
+  })
+})
+
+
+app.get('/vagrant/destroy', function (req, res) {
+  vagrant.destroy('-f',function(code){
+    
+  })
+})
+
+var minionInfo={}
+minionInfo.minion1={
+      "ram":"1024",
+      "cpu":"1",
+      "name":"test1"
+    }
+  
+
+minionInfo.minion2={
+      "ram":"1024",
+      "cpu":"1",
+      "name":"test2"
+    }
+  
+
+app.get('/defMinion/:minionNo',function(req, res){
+//   minion.Ram=req.param('ram')
+//   minion.Cpu=req.param('cpu')
+//   minion.Name=req.param('name'+(++minioncnt))
+
+    console.log(minionInfo)
+    minion=minionInfo["minion"+(req.param('minionNo'))]
+
+    res.send(minion)
+})
+
+app.get('/defMinionCnt',function(req, res){
+//   minion.Ram=req.param('ram')
+//   minion.Cpu=req.param('cpu')
+//   minion.Name=req.param('name'+(++minioncnt))
+ 
+
+    res.send({"num" :2})
+
+})
+
+
+app.get('/set', function (req, res) {
+  whales.getContainerlist(docker, function(err,container){
+    
+    if(err) {
+      res.send(err) 
+      return
+    }
+    res.send(container)
+  })
+})
+
+
+
+
+var server = app.listen(3000, function () {
+
+  var host = server.address().address
+  var port = server.address().port
+
+  console.log('Example app listening at http://%s:%s', host, port)
+})

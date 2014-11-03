@@ -1,0 +1,45 @@
+
+
+
+<div class="container" style="height: 100%;
+position: absolute;
+width: 100% !important;
+padding: 0;">
+    <!-- top bar -->
+    <div class="navbar navbar-left navbar-fixed-top estimate-top" >
+        <!-- Title bar & Menu Items-->
+        <div top-bar></div>
+    </div>
+
+    <!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
+    <div class="pretty-split-pane-frame" style="height: 100%">
+        <div class="split-pane horizontal-percent">
+            <div class="split-pane-component" id="top-component">
+                <div id="topPane" class="pretty-split-pane-component-inner" style="height: 100%"><!-- This div is added for styling purposes only. It's not part of the split-pane plugin. -->
+                    <div id="split-pane-1" class="split-pane fixed-left">
+                        <div class="split-pane-component" id="left-component">
+                            <div tree-view></div>
+                        </div>
+                        <div class="split-pane-divider" id="divider"></div>
+                        <div class="split-pane-component" id="right-component">
+                            <div ground-view></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="split-pane-divider" id="my-divider"></div>
+            <div class="split-pane-component" id="bottom-component">
+                <div class="pretty-split-pane-component-inner estimate bottom">
+                    <div bottom-view></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div data-ng-controller="TitlebarController" class="navbar navbar-fixed-bottom estimate bottom-bar" style="padding-left:10px; font-size:9px; color:#fff">
+            {{inputFile}}
+        </div>
+    </div>
+</div>
+

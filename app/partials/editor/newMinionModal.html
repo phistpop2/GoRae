@@ -1,0 +1,42 @@
+<div ng-controller="ModalDemoCtrl">
+    <script type="text/ng-template" id="app/partials/editor/newMinionModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">새로운 미니언</h3>
+            <h5>Docker를 생성하기위한 미니언을 만들어보세요.</h5>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="minionName" class="col-sm-2 control-label">Minion</label>
+                    <div class="col-sm-10">
+                        <input ng-model="minion_name" type="text" class="form-control" id="minionName" placeholder="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="CPU" class="col-sm-2 control-label">CPU</label>
+                    <div class="col-sm-10">
+                        <input ng-model="minion_cpu" type="text" class="form-control" id="CPU" placeholder="core">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ram" class="col-sm-2 control-label">Memory</label>
+                    <div class="col-sm-10">
+                        <input ng-model="minion_ram" type="text" class="form-control" id="ram" placeholder="MB">
+                    </div>
+                </div>
+            </form>
+            <div>
+
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+    <button class="btn btn-primary btn-large" ng-click="open()">새로운 Minion</button>
+</div>

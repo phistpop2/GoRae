@@ -1,0 +1,40 @@
+<div id="slidein-panel" style="background:rgba(0,0,0,0.8);">
+    <!-- SlidePanel Button Container -->
+    <div id="slidein-panel-container">
+        <a id="slidein-panel-btn" class="btn btn-inverse"><i class="fa fa-align-justify"></i></a>
+    </div>
+    <!-- /SlidePanel Button Container -->
+
+    <!-- SlidePanel Content -->
+    <div class="panel with-nav-tabs panel-default estimate side">
+        <div class="panel-heading estimate tab-header">
+            <div class="side btn-group" style="padding:10px; width:300px; font-size:12px; border-bottom: 1px solid #c9c9c9">
+                <a class="btn btn-inverse side-toggle active" href="#side-tab1" data-toggle="tab" style="width:50%">Filter</a>
+                <a class="btn btn-inverse side-toggle" href="#side-tab2" data-toggle="tab" style="width:50%">Reference</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="side-tab1">
+                    <ul>
+                        <div data-ng-repeat="filtered in filtereds" >
+                            <div class="blockquote-box blockquote-primary clearfix" data-ng-click="filtered.setBounds()" style="border-color:{{filtered.color}}">
+                                <button type="button" class="close" data-ng-click="filtered.remove()"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                <h4>filter</h4>
+                                <p class="point-count">{{filtered.points}} points</p>
+                                                            <span class="route-show">
+                                                                <t class="estimate check normal" >이동경로</t>
+                                                                <input type="checkbox" data-ng-model="filtered.show" data-ng-click="filtered.toggle()" >
+                                                            </span>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="side-tab2" style="">
+                    tab2
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /SlidePanel Content -->
+</div>

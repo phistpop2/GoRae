@@ -1,0 +1,548 @@
+var Docker = require('dockerode');
+var vagrant = require('vagrant');
+var MemoryStream = require('memorystream');
+var streams = require('memory-streams');
+var stm = require('stream');
+
+// Write method
+
+
+//var ssh = require('scp');
+docker = new Docker({ socketPath: false, host: 'http://172.17.8.101', port: '2375'});
+
+
+var optsc = {
+  'Hostname': '',
+  'User': '',
+  'AttachStdin': true,
+  'AttachStdout': true,
+  'AttachStderr': true,
+  'Tty': true,
+  'OpenStdin': true,
+  'StdinOnce': false,
+  'Env': null,
+  // 'Cmd': ['bash'],
+  'Dns': ['8.8.8.8', '8.8.4.4'],
+  'Image': '',
+  'Volumes': {},
+  'VolumesFrom': ''
+};
+
+var previousKey,
+    CTRL_P = '\u0010',
+    CTRL_Q = '\u0011';
+
+handler=function(err, container, cb) {
+  
+    if(err) {
+      cb(err)
+      return
+    }
+
+    container.inspect(function(err, data){
+    if(err) {
+        cb(err); return;
+
+    }else{
+      var att = data.Config
+        // console.log(data.Config)
+      var  attach_opts = {stream: att.Tty, stdin: att.AttachStdin, stdout: att.AttachStdout, stderr: att.AttachStderr};
+
+
+      if(att.AttachStdout){
+          container.attach(attach_opts, function handler(err, stream) {
+                // Show outputs
+                stream.pipe(process.stdout);
+                // Connect stdin
+                var isRaw = process.isRaw;
+                process.stdin.resume();
+                process.stdin.setEncoding('utf8');
+                process.stdin.setRawMode(true);
+                process.stdin.pipe(stream);
+
+                process.stdin.on('data', function(key) {
+                  // Detects it is detaching a running container
+                  if (previousKey === CTRL_P && key === CTRL_Q) exit(stream, isRaw);
+                  previousKey = key;
+                });
+
+              container.start({'PublishAllPorts':true},function(err, data) {
+                resize(container);
+                process.stdout.on('resize', resize);
+
+                        container.wait(function(err, data) {
+                           console.log(err, data)
+                          cb()
+                          exit(stream, isRaw);
+                         
+                        });
+                });
+              });
+        }
+        
+      else {   
+        container.start({'PublishAllPorts':true},function(err, data) {
+
+          console.log(err, data)
+            cb()
+          });
+        }
+      }
+      });
+      
+    }
+
+
+function cbcb( cb ){
+
+   return function( err, container ){
+
+      handler( err, container, cb );
+   }
+
+}
+
+// Resize tty
+function resize (container) {
+  var dimensions = {
+    h: process.stdout.rows,
+    w: process.stderr.columns
+  };
+
+  if (dimensions.h != 0 && dimensions.w != 0) {
+    container.resize(dimensions, function() {});
+  }
+}
+
+// Exit container
+function exit (stream, isRaw) {
+  process.stdout.removeListener('resize', resize);
+  process.stdin.removeAllListeners();
+  process.stdin.setRawMode(isRaw);
+  process.stdin.resume();
+  stream.end();
+}
+
+exports.createContainer=function(docker, optsc, cb){
+  //Image, CMD insert 
+  docker.createContainer(optsc, cbcb(cb));
+  
+};
+exports.MEANRunWithSocket=function(docker, info, socket, cb){
+
+     console.log(info)
+
+
+
+    docker.pull(info.Image, function (err, stream) {
+        if(err) {
+            cb(err)
+        }else {
+            stream.on( 'data', function( data ){
+                socket.emit( 'data', data );
+            });
+            //stream.pipe(process.stdout, {end: true});
+
+
+            var writer = new MemoryStream();
+
+            writer.on( 'data', function(data){
+                socket.emit('data', data);
+            })
+
+            stream.on('end', function () {
+                docker.run(info.Image, null, writer, info.Cmd, info, function (Id, stream) {
+                    // optsc.Image = IMG
+                    // docker.createContainer(optsc, )
+                    console.log(Id, stream)
+
+                    if (stream != null && stream.StatusCode != 0 && stream.on ) {
+                        //stream.pipe(process.stdout, {end: true});
+                        stream.on( 'data', function( data ){
+                            socket.emit( 'data', data );
+                        });
+                        stream.on('end', function () {
+                            cb(err, stream);
+                        })
+                    }else
+                        cb(err, stream)
+                })
+            });
+        }
+    });
+}
+exports.MEANRunWithSocket2=function(docker, info, socket, cb){
+
+    console.log(info)
+
+
+
+    docker.pull(info.Image, function (err, stream) {
+        if(err) {
+            cb(err)
+        }else {
+            stream.on( 'data', function( data ){
+                socket.emit( 'data', data );
+            });
+            //stream.pipe(process.stdout, {end: true});
+
+
+            var writer = new MemoryStream();
+
+            writer.on( 'data', function(data){
+                socket.emit('data', data);
+            })
+
+            stream.on('end', function () {
+                docker.run(info.Image, null, writer, info, info, function (Id, stream) {
+                    // optsc.Image = IMG
+                    // docker.createContainer(optsc, )
+                    console.log(Id, stream)
+
+                    if (stream != null && stream.StatusCode != 0 && stream.on ) {
+                        //stream.pipe(process.stdout, {end: true});
+                        stream.on( 'data', function( data ){
+                            socket.emit( 'data', data );
+                        });
+                        stream.on('end', function () {
+                            cb(err, stream)
+                        })
+                    }else
+                        cb(err, stream)
+                })
+            });
+        }
+    });
+}
+
+
+
+exports.MEANRun=function(docker, info, cb){
+
+    // console.log(info)
+
+
+
+    docker.pull(info.Image, function (err, stream) {
+        if(err) {
+            cb(err)
+        }else {
+            stream.on( 'data', function( data ){
+                console.log( 'data', data );
+            });
+            //stream.pipe(process.stdout, {end: true});
+
+            stream.on('end', function () {
+                docker.run(info.Image, null, process.stdout, info, info, function (Id, stream) {
+                    // optsc.Image = IMG
+                    // docker.createContainer(optsc, )
+                    console.log(Id, stream)
+                    exports.getPort(docker, Id, function(data){
+                        console.log(data)
+                    });
+
+                    // if (stream != null && stream.StatusCode != 0) {
+                    //     stream.pipe(process.stdout, {end: true});
+                    //     stream.on('end', function () {
+                    //         cb(err, stream)
+                    //     })
+                    // }
+                    cb(err, stream)
+                })
+            });
+        }
+    });
+}
+
+exports.pullAndRunWithSocket = function( docker, image, socket, cb ){
+    var optsc = {
+        'Hostname': '',
+        'User': '',
+        'AttachStdin': true,
+        'AttachStdout': true,
+        'AttachStderr': true,
+        'Tty': true,
+        'OpenStdin': true,
+        'StdinOnce': false,
+        'Env': [ "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "HOME=/root"],
+        'Cmd': ['mongod','--rest'],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Image': image,
+        'Volumes': ["/data/db"],
+        //'VolumesFrom': 'storage:/data',
+        'WorkDir':'/data',
+        // 'PortBindings':{
+        // "2368/tcp":{}
+        // },
+        'PublishAllPorts':true
+    };
+
+
+    docker.pull(optsc.Image, function (err, stream) {
+        if(err) {
+            cb(err)
+        }else {
+            stream.on( 'data', function( data ){
+                socket.emit( 'data', data );
+            });
+            //stream.pipe(process.stdout, {end: true});
+
+
+            var writer = new MemoryStream();
+
+            writer.on( 'data', function(data){
+                socket.emit('data', data);
+            })
+
+            stream.on('end', function () {
+                docker.run(optsc.Image, null, writer, true, {'PublishAllPorts': true}, function (Id, stream) {
+                    // optsc.Image = IMG
+                    // docker.createContainer(optsc, )
+                    console.log(Id, stream)
+
+                    if (stream != null && stream.StatusCode != 0) {
+                        //stream.pipe(process.stdout, {end: true});
+                        stream.on( 'data', function( data ){
+                            socket.emit( 'data', data );
+                        });
+                        stream.on('end', function () {
+                            cb(err, stream)
+                        })
+                    }else
+                        cb(err, stream)
+                })
+            });
+        }
+    });
+};
+
+exports.pullAndRun=function(docker, image, cb){
+    var optsc = {
+        'Hostname': '',
+        'User': '',
+        'AttachStdin': true,
+        'AttachStdout': true,
+        'AttachStderr': true,
+        'Tty': true,
+        'OpenStdin': true,
+        'StdinOnce': false,
+        // 'Env': [ "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        //     "HOME=/root"],
+        // 'Cmd': [,'--rest'],
+        'Dns': ['8.8.8.8', '8.8.4.4'],
+        'Image': image,
+        // 'Volumes': ["/data/db"],
+        //'VolumesFrom': 'storage:/data',
+        // 'WorkDir':'/data',
+        // 'PortBindings':{
+        // "2368/tcp":{}
+        // },
+        'PublishAllPorts':true
+    };
+
+
+    docker.pull(optsc.Image, function (err, stream) {
+        if(err) {
+            cb(err)
+        }else {
+            stream.on( 'data', function( data ){
+                console.log( 'data', data );
+            });
+            //stream.pipe(process.stdout, {end: true});
+
+            stream.on('end', function () {
+                docker.run(optsc.Image, null, process.stdout, true, {'PublishAllPorts': true}, function (Id, stream) {
+                    // optsc.Image = IMG
+                    // docker.createContainer(optsc, )
+                    console.log(Id, stream)
+                    exports.getPort(docker, Id, function(data){
+                        console.log(data)
+                    });
+
+                    if (stream != null && stream.StatusCode != 0) {
+                        stream.pipe(process.stdout, {end: true});
+                        stream.on('end', function () {
+                            cb(err, stream)
+                        })
+                    }
+                    cb(err, stream)
+                })
+            });
+        }
+    });
+}
+
+exports.searchImage=function(docker, keyword, cb){
+    console.log(keyword)
+    var url = ( keyword && keyword.length > 0 )? "dockerfile/"+keyword : "dockerfile/trusted";
+
+    console.log(url);
+    docker.searchImages( {"term": url },cb);
+}
+
+exports.getImage=function(docker, Image, cb){
+      console.log(Image)
+
+  docker.getImage(Image, function(err,data){
+    console.log(err)
+    if(err){
+      cb(err)
+      return
+    }
+    console.log(data);
+    cb(data)
+  });
+}
+
+exports.getImagelist=function(docker, cb){
+  docker.listImages({all: false}, cb );
+}
+
+exports.getContainerlist=function(docker, cb){
+
+  docker.listContainers({all:false},function(err, containers){
+    // console.log(containers)
+    cb(err, containers)
+  })
+}
+
+
+
+
+exports.allContainerStop=function(docker, cb){
+
+  docker.listContainers({all:false},function (err, containers){
+    if(err) {
+      cb(err)
+      return
+    }
+  containers.forEach(function(container){
+    if(container!=null)
+    docker.getContainer(container.Id).kill(function(data){
+          console.log(data)
+    })
+  })
+   cb("clean")
+    })
+  
+}
+
+exports.createImage=function(docker, Image, cb){
+
+  console.log(Image)
+  if(docker.getImage(Image))
+          docker.createImage({fromImage:Image},function(err, stream){
+            if(err) cb(err)
+            // stream.pipe(process.stdout);
+                 cb(stream)
+  });
+   
+}
+
+exports.stopContainer=function(docker, id, cb){
+  docker.getContainer(id,function(){})
+}
+
+exports.getPort=function(docker, containerId, cb){
+
+docker.listContainers({all:false, 'Id':containerId},function (err, containers){
+    if(err) cb(err)
+    
+    containers.forEach(function(container){
+      // console.log(container)
+      if(container.Id == containerId){
+         var portslist=[]
+      container.Ports.forEach(function(port){
+       portslist.push({"PrivatePort":port.PrivatePort, "PublicPort":port.PublicPort })
+    })
+       if(portslist) cb(portslist)
+       else cb("no exist container : "+containerId)
+      }
+    })
+  })
+
+  }
+  // if(docker)
+  //container create
+
+  //container start
+
+exports.runDocker=function(docker, Image, cb){
+  Image='dockerfile/nginx'
+  docker.run(Image,'nginx',process.stdout, false, function(err, image){
+
+  if(err) {
+    docker.createImage({fromImage:Image},function(err, stream){
+      if(err) cb(err)
+      stream.pipe(process.stdout);
+      
+
+    })    
+  }
+  console.log(image)
+  cb(image); 
+});
+}
+
+
+
+// docker.listImages(
+// 	function (err, images){
+
+// 		images.forEach(function (imageinfo){
+
+// 			console.log(imageinfo.RepoTags);
+
+// 			docker.getImage(imageinfo.Id).inspect(function(err,res){
+// 				if(err)
+// 					console.log(err);
+// 				console.log(res);
+// 			})
+// 		})
+// 	})
+
+// docker.listContainers
+
+// (function (err, containers) {
+
+// 	console.log(containers);
+
+//   containers.forEach(function (containerInfo) {
+//    docker.getContainer(containerInfo.Id).export( function( err, res){
+         
+//    		if(err)
+//    			console.log(err);
+
+// 		function handler(err, container) {
+// 		  var attach_opts = {stream: true, stdin: true, stdout: true, stderr: true};
+
+// 		  container.attach(attach_opts, function handler(err, stream) {
+// 		    // Show outputs
+// 		    stream.pipe(process.stdout);
+
+// 		    // Connect stdin
+// 		    var isRaw = process.isRaw;
+// 		    process.stdin.resume();
+// 		    process.stdin.setEncoding('utf8');
+// 		    process.stdin.setRawMode(true);
+// 		    process.stdin.pipe(stream);
+
+// 		    process.stdin.on('data', function(key) {
+// 		      // Detects it is detaching a running container
+// 		      if (previousKey === CTRL_P && key === CTRL_Q) exit(stream, isRaw);
+// 		      previousKey = key;
+// 		    });
+
+// 		    container.start(function(err, data) {
+// 		      resize(container);
+// 		      process.stdout.on('resize', resize);
+
+// 		      container.wait(function(err, data) {
+// 		        exit(stream, isRaw);
+// 		      });
+// 		    });
+// 		  });
+// 		}
+//    })  });
+// });

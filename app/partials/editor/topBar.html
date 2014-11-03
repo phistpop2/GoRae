@@ -1,0 +1,23 @@
+<div class="navbar-inner estimate top-container">
+    <!-- Top Menu Items -->
+    <ul class="nav top-nav estimate menu-bar">
+        <li >
+            <a class="brand estimate titlebar">
+                <i class="glyphicon glyphicon-ok" data-ng-style="logoStyle"></i>{{title}}
+            </a>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" >Log out</a>
+            <ul class="dropdown-menu">
+                <li data-ng-repeat="menu in fileMenus" data-ng-click="menu.click()">
+                    <a>{{ menu.menuName }}</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#">Exit</a>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+</div>

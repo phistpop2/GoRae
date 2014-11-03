@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html data-ng-app="whalesApp">
+<head>
+    <title>Customer Manager</title>
+
+    <!-- Something like API -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet"/>
+    <link href="css/split-pane.css" rel="stylesheet"/>
+    <link href="css/sb-admin.css" rel="stylesheet"/>
+
+
+    <!-- Custom CSS -->
+    <link href="docs/assets/css/demo.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/jqw/jqwidgets/styles/jqx.custom.css" type="text/css" />
+    <link href="css/estimate.css" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <link href="css/slidepanel.css" ref="stylesheet"/>
+    <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" />
+    <script src="http://leafletjs.com/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="/dist/ladda-themeless.min.css">
+    <script src="/dist/spin.min.js"></script>
+    <script src="/dist/ladda.min.js"></script>
+    <script src="/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+
+
+</head>
+
+
+<body data-ng-controller="ToolController" >
+<input  style="display: none" id="workspaceDialog" type="file" file-dialog-view/>
+<input  style="display: none" id="sensorDialog" type="file" sensor-dialog-view/>
+<input  style="display: none" id="javaDialog" type="file" java-dialog-view/>
+
+
+
+<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                <h4 class="modal-title" id="myModalLabel">Save</h4>
+            </div>
+            <div class="modal-body">
+
+                <p>저장할 파일 이름을 지정하세요.</p>
+                <input type="text" id="saveName"/>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button ng-click="export()" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dalog -->
+</div><!-- /.modal -->
+
+
+
+
+<!-- Vendor Libs: jQuery only used for Bootstrap functionality -->
+<script src="lib/angular-1.2.24/angular.js"></script>
+<script src="lib/angular-1.2.24/angular-route.js"></script>
+<script src="js/jquery-1.11.0.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<script src="/public/js/jquery.nouislider.min.js"></script>
+<script src="js/flat.js"></script>
+
+<!-- UI Libs -->
+<script src="js/bootstrap.min.js"></script>
+<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="/dist/angular-pageslide-directive.js"></script>
+
+<!-- Const value -->
+<script src="app/EstimateConst.js"></script>
+<script src="app/util/ConfigManager.js"></script>
+<script src="app/util/WorkspaceManager.js"></script>
+
+<!-- Models -->
+<script src="app/model/configModel.js"></script>
+<script src="app/model/gpsModel.js"></script>
+<script src="app/model/demoModel.js"></script>
+
+<!-- App libs -->
+<script src="app/app.js"></script>
+
+<!-- App.Controller libs -->
+<script src="app/controllers/controllers.js"></script>
+
+<!-- App.Service libs -->
+<script src="app/services/customersService.js"></script>
+<script src="app/services/toolService.js"></script>
+<script src="app/services/estimateService.js"></script>
+
+<!-- App.View libs -->
+<script src="app/directives/animatedView.js"></script>
+<script src="app/directives/fileDialogView.js"></script>
+<script src="/app/directives/editor/topbar.js"></script>
+<script src="/app/directives/editor/groundView.js"></script>
+<script src="/app/directives/editor/notificationSlide.js"></script>
+<script src="/app/directives/editor/treeView.js"></script>
+<script src="/app/directives/editor/minionsView.js"></script>
+<script src="/app/directives/editor/whalesView.js"></script>
+<script src="/app/directives/editor/newMinionModal.js"></script>
+
+
+
+<script src="js/split-pane.js"></script>
+<script src="js/slidepanel.js"></script>
+<script>
+    $(function() {
+        var tool = angular.element( $('body') ).scope();
+        tool.username = "<%= username %>";
+        tool.token = "<%= access_token %>";
+    });
+</script>
+
+
+
+<!-- Lib -->
+<script type="text/javascript" src="lib/jqw/scripts/demos.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxbuttons.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxscrollbar.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxpanel.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxtree.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxexpander.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxmenu.js"></script>
+<script type="text/javascript" src="lib/jqw/jqwidgets/jqxcheckbox.js"></script>
+<script src="lib/ace_demo/src-noconflict/ace.js"></script>
+
+
+<div ng-view></div>
+
+
+
+
+</body>
+
+
+
+</html>

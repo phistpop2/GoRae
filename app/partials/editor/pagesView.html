@@ -1,0 +1,192 @@
+<div class="container">
+
+    <header class="jumbotron hero-spacer">
+        <h1>Hello Pages!</h1>
+        <p>page를 만들어 자신만의 workflow를 만들어보세요. page는 whales script를 구성하는 단위가 됩니다.</p>
+        <p>
+            <a  class="btn btn-primary btn-large" ng-click="sm2('create')">새로운 Page  <span class="glyphicon glyphicon-plus"></span></a>
+        </p>
+
+    </header>
+
+
+
+
+    <!-- Title -->
+    <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Page Features -->
+    <div class="row well">
+        <div class="col-lg-5">
+            <div class="row">
+                <div class="control-group" id="fields">
+                    <label class="control-label" for="fields">나의 Commit List {{ pagesMine.length }}</label>
+                    <div class="controls">
+                            <div class="entry input-group" ng-repeat="page in pagesMine">
+                                <input readonly class="form-control" name="fields[]" type="text" value="{{page.page_name}}" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add" type="button" ng-click="sm2( 'commit',true, page )">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                            </div>
+                        </form>
+                        <br>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-offset-2 col-lg-5">
+            <div class="row">
+                <div class="control-group" id="fields2">
+                    <label class="control-label" for="fields2">Branch가 필요한 Commit List {{ pagesNotMine.length }}</label>
+                    <div class="controls">
+                        <form role="form" autocomplete="off">
+                            <div class="entry input-group" ng-repeat="page in pagesNotMine">
+                                <input readonly class="form-control" name="fields[]" type="text" value="{{page.page_name}}" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-add" type="button" ng-click="sm2('branch', false, page )">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                        </span>
+                            </div>
+                        </form>
+                        <br>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <a id="btn-minions-top" hidden  ps-open="pagetop" ps-class="panel" ps-size="90%" pageslide="top" ps-speed="0.7" href="#demo-top2"></a>
+    <div style="padding:50px; overflow: auto; " id="demo-top2">
+        <div class="row">
+            <div class="col-lg-2">
+
+                <div class="well">
+                    <h2>Hello Page</h2>
+                    <p>Put here whatever you want</p>
+                    <a  class="btn btn-lg btn-primary" ng-click="sm2close()" >Close</a>
+                </div>
+            </div>
+            <div class="col-lg-10 well">
+
+
+                <div class="col-lg-4 well">
+                    <label class="control-label">Page 정보</label>
+                    <form role="form" class="form-horizontal">
+                    <div class="form-group page-group">
+                        <label for="name" class="col-sm-3 control-label">Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="name" name="concept" ng-model="newPageName">
+                        </div>
+                    </div>
+                    <div class="form-group page-group">
+                        <label for="commit-msg" class="col-sm-3 control-label">commit</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="commit-msg" name="concept" ng-model="newPageCommitMessage">
+                        </div>
+                    </div>
+                    <div class="form-group page-group">
+                        <label for="description" class="col-sm-3 control-label">description</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="description" name="concept" ng-model="newPageDescription">
+                        </div>
+                    </div>
+
+                    <div class="form-group page-group">
+                        <label for="url" class="col-sm-3 control-label">path</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="url" name="concept" ng-model="newPageUrl">
+                        </div>
+                    </div>
+
+                        <div class="form-group page-group">
+                            <label for="docker" class="col-sm-3 control-label">dockerfile</label>
+                            <div class="col-sm-9">
+                                <input readonly type="text" class="form-control" id="docker" name="concept" ng-model="searchFile">
+                            </div>
+                        </div>
+
+                    <div class="form-group page-group">
+                        <label for="rest" class="col-sm-3 control-label">REST</label>
+                        <div class="col-sm-9 page-select-group">
+                            <select class="col-sm-9 " id="rest" name="rest" ng-model="newPageRest">
+                                <option selected value="post">
+                                    post
+                                </option>
+                                <option value="get">
+                                    get
+                                </option>
+                                <option value="del">
+                                    del
+                                </option>
+                                <option value="put">
+                                    put
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group  page-group">
+                        <label for="language" class="col-sm-3 control-label">language</label>
+                        <div class="col-sm-9 page-select-group">
+                            <select class="" id="language" name="language" ng-model="newPageLanguage">
+                                <option selected value="javascript">
+                                    javascript
+                                </option>
+
+                                <option value="python">
+                                    python
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    </form>
+
+                </div>
+                <div class="col-lg-3 well" style="margin-left : 15px" >
+                    <label class="control-label" >Dockerfile 검색</label>
+
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" ng-model="searchKeyword">
+                          <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" ng-click="search()">
+                              <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                         </span>
+                        </div><!-- /input-group -->
+                    <form role="form" autocomplete="off">
+                        <div class="entry input-group" ng-repeat="searchFile in searchFiles">
+                            <input readonly class="form-control" name="fields[]" type="text" value="{{searchFile.name}}" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-success btn-add" type="button" ng-click="setDocker(searchFile.name)">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </button>
+                                            </span>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="col-lg-4">
+                    <div id="editor2" style="height:300px; border-radius: 5px; margin-bottom:5px;">
+                    </div>
+
+                    <button class="btn btn-primary pull-right"
+                            type="submit" style="width:100%;" ng-click="np()">{{action}}</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

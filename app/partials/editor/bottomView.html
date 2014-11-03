@@ -1,0 +1,45 @@
+<div class="btn-toolbar estimate toolbar bottom">
+    <div>
+        <ul class="nav top-nav estimate" id="bottom-toolbar">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">Console<span class="caret"></span></a>
+                <ul class="dropdown-menu alert-dropdown">
+                    <li>
+                        <a href="#">Exit</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <input type="checkbox" ng-model="checkedNormal" ng-init="checkedNormal=true" ><t class="estimate check normal" >normal</t></li>
+            </li>
+            <li>
+                <input type="checkbox" ng-model="checkedSuccess" ng-init="checkedSuccess=true" ><t class="estimate check success" >success</t></li>
+            </li>
+            <li>
+                <input type="checkbox" ng-model="checkedWarning" ng-init="checkedWarning=true" ><t class="estimate check warning" >warning</t></li>
+            </li>
+            <li>
+                <input type="checkbox" ng-model="checkedError" ng-init="checkedError=true" ><t class="estimate check error" >error</t></li>
+            </li>
+            <li>
+                <input type="checkbox" ng-model="checkedResult" ng-init="checkedJSON=false" ><t class="estimate check result" >result(JSON)</t></li>
+            </li>
+        </ul>
+    </div>
+</div> <!-- /toolbar -->
+<div class="estimate log-box">
+    <ul style="list-style: none">
+        <li data-ng-repeat="log in logs"
+            data-ng-if=
+                    "
+                            (checkedNormal && log.class=='normal') ||
+                            (checkedWarning && log.class=='warning') ||
+                            (checkedSuccess && log.class=='success') ||
+                            (checkedError && log.class=='error')    ||
+                            (checkedResult && log.class=='result')
+                            ">
+            <a class="estimate log {{log.class}} {{log.type}}">
+                <t data-ng-if="log.type!='divider'">{{ log.date | date: "[ yyyy-MM-dd hh:mm:ss ]" }}&nbsp;&nbsp;</t> {{ log.text }}</a>
+        </li>
+    </ul>
+</div>

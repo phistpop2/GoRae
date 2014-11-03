@@ -1,0 +1,227 @@
+<div class="container">
+
+    <header class="jumbotron hero-spacer">
+        <h1>Hello Whales!</h1>
+        <p>Whales를 만들어 자신만의 workflow를 만들어보세요. </p>
+        <p>
+            <a  class="btn btn-primary btn-large" ng-click="sm1('create')">새로운 Whales</a>
+        </p>
+    </header>
+
+
+
+    <!-- Title -->
+    <div class="row">
+        <div class="col-lg-12">
+
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Page Features -->
+    <div class="row well">
+        <div class="col-lg-5">
+            <div class="row">
+                <div class="control-group" id="fields">
+                    <label class="control-label" for="fields">나의 Commit List {{ pagesMine.length }}</label>
+                    <div class="controls">
+                        <div class="entry input-group" ng-repeat="page in pagesMine">
+                            <input readonly class="form-control" name="fields[]" type="text" value="{{page.page_name}}" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-add" type="button" ng-click="sm1( 'commit',true, page )">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                        </span>
+                        </div>
+                        </form>
+                        <br>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-offset-2 col-lg-5">
+            <div class="row">
+                <div class="control-group" id="fields2">
+                    <label class="control-label" for="fields2">Branch가 필요한 Commit List {{ pagesNotMine.length }}</label>
+                    <div class="controls">
+                        <form role="form" autocomplete="off">
+                            <div class="entry input-group" ng-repeat="page in pagesNotMine">
+                                <input readonly class="form-control" name="fields[]" type="text" value="{{page.page_name}}" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-add" type="button" ng-click="sm1('branch', false, page )">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                        </span>
+                            </div>
+                        </form>
+                        <br>
+                        <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+
+    <a id="btn-minions-top" hidden  ps-open="whaletop" ps-class="panel" ps-size="90%" pageslide="top" ps-speed="0.7" href="#demo-top1"></a>
+    <div style="padding:50px; overflow: auto; " id="demo-top1">
+        <div class="row">
+            <div class="col-lg-2">
+
+                <div class="col-lg-12 well">
+                    <h2>Hello Whales</h2>
+                    <p>Put here whatever you want</p>
+                    <form role="form" class="form-horizontal">
+                        <div class="form-group  page-group">
+                            <label for="language" class="col-lg-3 control-label">minion</label>
+                            <div class="col-lg-9 page-select-group">
+                                <select class="" id="language" name="language" ng-model="newWhaleMinion">
+                                    <option value="{{minion.name}}" ng-repeat="minion in minions">
+                                        {{minion.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                        <button   class="col-lg5 col-lg-offset-2 btn btn-sm btn-primary" ng-click="sm1close()" >Deploy</button>
+
+
+                        <button   class="col-lg-5 btn btn-sm btn-default" ng-click="sm1close()" >Close</button>
+
+                </div>
+
+
+            </div>
+            <div class="col-lg-10 well">
+                <div class="col-lg-4">
+                    <label class="control-label">Whales 정보</label>
+                    <form role="form" class="form-horizontal">
+                        <div class="form-group page-group">
+                            <label for="name" class="col-sm-3 control-label">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name" name="concept" ng-model="newWhaleName">
+                            </div>
+                        </div>
+                        <div class="form-group page-group">
+                            <label for="description" class="col-sm-3 control-label">description</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="description" name="concept" ng-model="newWhaleDescription">
+                            </div>
+                        </div>
+
+                    </form>
+                    <hr>
+                    <label class="control-label">Dockerfiles</label>
+                    <form role="form" autocomplete="off">
+                        <div class="entry input-group" ng-repeat="dockerfile in addedDockerFile">
+                            <input readonly class="form-control" name="fields[]" type="text" value="{{dockerfile}}" />
+                            <span class="input-group-btn">
+                                 <button class="btn btn-danger" type="button" ng-click="dockering(dockerfile)">
+                                     <span class="glyphicon glyphicon-minus"></span>
+                                 </button>
+                            </span>
+                        </div>
+                        <div class="entry input-group" ng-repeat="file in files">
+                            <input readonly class="form-control" name="fields[]" type="text" value="{{file.name}}" />
+                            <span class="input-group-btn">
+                                 <button class="btn btn-warning" type="button" ng-click="removeFile(file)">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                 </button>
+                            </span>
+                        </div>
+                    </form>
+                    <button class="btn btn-primary pull-right"
+                            type="submit" style="width:100%;" ng-click="nw()">{{action}}</button>
+                </div>
+                <div class="col-lg-4" >
+                    <div class="well">
+                        <label class="control-label" >Dockerfile 로컬</label>
+
+
+
+                                <label for="fileToUpload">Select a File to Upload</label><br />
+                                <input type="file" ng-model-instant id="fileToUpload" multiple onchange="angular.element(this).scope().setFiles(this)" />
+
+                            <div id="dropbox" class="dropbox" ng-class="dropClass"><span>{{dropText}}</span></div>
+                            <div ng-show="files.length">
+                                <div ng-repeat="file in files.slice(0)">
+                                    <span>{{file.webkitRelativePath || file.name}}</span>
+                                    (<span ng-switch="file.size > 1024*1024">
+                                        <span ng-switch-when="true">{{file.size / 1024 / 1024 | number:2}} MB</span>
+                                        <span ng-switch-default>{{file.size / 1024 | number:2}} kB</span>
+                                    </span>)
+                                </div>
+
+                                <div ng-show="progressVisible">
+                                    <div class="percent">{{progress}}%</div>
+                                    <div class="progress-bar">
+                                        <div class="uploaded" ng-style="{'width': progress+'%'}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="well">
+                        <label class="control-label" >Dockerfile 검색</label>
+
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" ng-model="searchKeyword">
+                              <span class="input-group-btn">
+                              <button class="btn btn-default" type="button" ng-click="search()">
+                                  <span class="glyphicon glyphicon-search"></span>
+                              </button>
+                             </span>
+                        </div><!-- /input-group -->
+                        <form role="form" autocomplete="off">
+                            <div class="entry input-group" ng-repeat="searchFile in searchFiles">
+                                <input readonly class="form-control" name="fields[]" type="text" value="{{searchFile.name}}" />
+                                <span class="input-group-btn">
+                                   <button
+                                           ng-class="isAdded(searchFile.name) ? 'btn btn-danger' : 'btn btn-success'"
+                                           type="button" ng-click="dockering(searchFile.name)">
+                                    <span
+                                            ng-class="isAdded(searchFile.name) ? 'glyphicon glyphicon-minus' : 'glyphicon glyphicon-plus'">
+
+                                            </span>
+                                   </button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="well">
+                        <label class="control-label">Trusted dockerfile list</label>
+                        <div class="controls">
+                            <form role="form" autocomplete="off">
+                                <div class="entry input-group" ng-repeat="dockerfile in dockerfiles">
+                                    <input readonly class="form-control" name="fields[]" type="text" value="{{dockerfile.name}}" />
+                                        <span class="input-group-btn">
+                                             <button
+                                                     ng-class="isAdded(dockerfile.name) ? 'btn btn-danger' : 'btn btn-success'"
+                                                     type="button" ng-click="dockering(dockerfile.name)">
+                                    <span
+                                            ng-class="isAdded(dockerfile.name) ? 'glyphicon glyphicon-minus' : 'glyphicon glyphicon-plus'">
+
+                                            </span>
+                                             </button>
+                                        </span>
+                                </div>
+                            </form>
+                            <br>
+                            <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+</div>
