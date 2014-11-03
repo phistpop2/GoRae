@@ -1,3 +1,21 @@
+# GoRae
+
+1) Clone this project
+```
+git clone https://github.com/phistpop/GoRae/
+cd GoRae
+```
+
+2) install node modules
+
+3) run mongodb : can change mongodb port repository.js(41) DB_PORT
+
+4) node repository
+
+[using-GoRae]: http://youtu.be/UEK-mpfjrMM
+
+
+
 # CoreOS Vagrant
 
 This repo provides a template Vagrantfile to create a CoreOS virtual machine using the VirtualBox software hypervisor.
@@ -109,8 +127,3 @@ Then you can then use the `docker` command from your local shell by setting `DOC
 
     export DOCKER_HOST=tcp://localhost:2375
     
-# GoRae
-
-1. install node modules
-2. run mongodb : can change mongodb port repository.js(41) DB_PORT
-3. node repository
