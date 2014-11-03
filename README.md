@@ -25,6 +25,8 @@ We made web UI for light user who haven't full understanding about Virtual machi
 "고래" "GoRae" means whale in Korean.
 
 
+Clip : http://www.youtube.com/watch?v=UEK-mpfjrMM
+
 
 
 
