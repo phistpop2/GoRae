@@ -14,7 +14,7 @@ cd GoRae
 
 5) Get started [using-GoRae]
 
-[Clip]: http://youtu.be/UEK-mpfjrMM
+Clip: http://youtu.be/UEK-mpfjrMM
 
 
 
